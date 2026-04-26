@@ -1,0 +1,21 @@
+function res=myNewton2(x)
+
+
+
+Nmax=10000;
+n=0;
+old=x;
+enter=1;
+epsilon=10^(-8);
+while(enter)
+    n=n+1;
+    new=old-2*sign(old)*abs(old);
+    
+    if ((abs(new-old)<epsilon) || (n>Nmax))
+        enter=0;
+    else
+        old=new;
+    end
+end
+
+res=new;

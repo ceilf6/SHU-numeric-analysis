@@ -1,0 +1,35 @@
+function sol=myNewton3
+
+
+sol=[];
+for i=1:100
+    for j=1:100
+        
+        myval=-2+i/25.+1i*(-2+j/25);
+        
+        
+Nmax=10000;
+n=0;
+old=myval;
+enter=1;
+epsilon=10^(-8);
+while(enter)
+    n=n+1;
+    new=old-(old^7-2*old^3+5)/(7*old^6-6*old^2);
+    
+    if ((abs(new-old)<epsilon) || (n>Nmax))
+        enter=0;
+    else
+        old=new;
+    end
+end
+
+sol=[sol,new];
+
+    end
+end
+
+racine=sol(1);
+
+for i=1:size(sol,2)
+    if (min(abs(sol(i)-racine))>)

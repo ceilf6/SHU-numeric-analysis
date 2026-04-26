@@ -1,0 +1,31 @@
+function [Achap,bchap,flag]=EliminationGauss(A,b)
+
+n=size(A,1);
+Achap=A;
+bchap=b;
+flag=1;
+epsilon=0.00001;
+k=1;
+while(flag && k<n)
+    if (abs(Achap(k,k))<epsilon)
+        flag=0;
+    else
+      for i=k+1:n
+          c=Achap(i,k)/Achap(k,k)
+          bchap(i)=bchap(i)-c*bchap(k)
+          Achap(i,k)=0
+          for j=k+1:n
+              Achap(i,j)=Achap(i,j)-c*Achap(k,j)
+          end
+      end
+        
+        
+    end
+k=k+1;   
+end
+
+if (flag && abs(Achap(n,n))<epsilon)
+        flag=0;
+end
+
+    
