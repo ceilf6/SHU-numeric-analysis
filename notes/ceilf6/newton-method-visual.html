@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Newton 法中间过程可视化</title>
+  <style>
+    :root {
+      --ink: #1b1b1f;
+      --muted: #62656d;
+      --paper: #f7f3ea;
+      --panel: #fffaf0;
+      --line: #d8cdbb;
+      --curve: #2458a6;
+      --tangent: #c43b2f;
+      --next: #26734d;
+      --root: #101010;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", "Noto Serif SC", serif;
+    }
+
+    main {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 32px 20px 44px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: end;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 5vw, 54px);
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .source {
+      max-width: 290px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+      text-align: right;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(260px, 0.85fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .board,
+    .side {
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .board {
+      padding: 14px;
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      background:
+        linear-gradient(to right, rgba(36, 88, 166, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(36, 88, 166, 0.08) 1px, transparent 1px),
+        #fffdf7;
+      background-size: 42px 42px;
+    }
+
+    .side {
+      padding: 18px;
+    }
+
+    .formula {
+      margin: 0 0 16px;
+      padding: 14px;
+      border-left: 4px solid var(--tangent);
+      background: #fff4e3;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .step-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .step-list li {
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      background: #fffdf7;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .controls {
+      margin-top: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--tangent);
+    }
+
+    .readout {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 14px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 13px;
+    }
+
+    .readout div {
+      min-height: 42px;
+      padding: 9px;
+      background: #fffdf7;
+      border: 1px solid var(--line);
+      overflow-wrap: anywhere;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .legend span::before {
+      content: "";
+      display: inline-block;
+      width: 22px;
+      height: 3px;
+      margin-right: 7px;
+      vertical-align: middle;
+      background: currentColor;
+    }
+
+    .curve-key {
+      color: var(--curve);
+    }
+
+    .tangent-key {
+      color: var(--tangent);
+    }
+
+    .next-key {
+      color: var(--next);
+    }
+
+    .exam {
+      margin-top: 22px;
+      border: 1px solid var(--line);
+      background: #fffdf7;
+      padding: 16px;
+    }
+
+    .exam h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .exam pre {
+      margin: 0;
+      white-space: pre-wrap;
+      font-size: 15px;
+      line-height: 1.5;
+      font-family: Georgia, "Times New Roman", "Noto Serif SC", serif;
+    }
+
+    text {
+      font-family: Georgia, "Times New Roman", "Noto Serif SC", serif;
+      font-size: 14px;
+      fill: var(--ink);
+    }
+
+    @media (max-width: 800px) {
+      header,
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .source {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Newton 法中间过程</h1>
+      <div class="source">
+        来源：Poly讲义.pdf，第 4.2.4 节<br>
+        例子：f(x)=x²-2，求 f(x)=0 的根
+      </div>
+    </header>
+
+    <section class="layout">
+      <div class="board">
+        <svg id="plot" viewBox="0 0 720 460" role="img" aria-label="Newton 方法从 x0 到 x1 的切线示意图"></svg>
+        <div class="legend">
+          <span class="curve-key">函数曲线 y=f(x)</span>
+          <span class="tangent-key">xₙ 处的切线</span>
+          <span class="next-key">切线与 x 轴交点 xₙ₊₁</span>
+        </div>
+      </div>
+
+      <aside class="side">
+        <p class="formula">
+          Newton 公式：<br>
+          x<sub>n+1</sub> = x<sub>n</sub> - f(x<sub>n</sub>) / f′(x<sub>n</sub>)
+        </p>
+
+        <ul class="step-list">
+          <li>先选一个初始点 x₀。</li>
+          <li>在曲线 y=f(x) 上找到点 (x₀, f(x₀))。</li>
+          <li>在这个点画切线。</li>
+          <li>切线与 x 轴的交点，就是下一步 x₁。</li>
+        </ul>
+
+        <div class="controls">
+          <label>
+            调整当前点 xₙ
+            <input id="xSlider" type="range" min="0.65" max="2.45" value="1.5" step="0.01">
+          </label>
+        </div>
+
+        <div class="readout">
+          <div>xₙ = <span id="xn"></span></div>
+          <div>f(xₙ) = <span id="fxn"></span></div>
+          <div>f′(xₙ) = <span id="dfxn"></span></div>
+          <div>xₙ₊₁ = <span id="xnext"></span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="exam">
+      <h2>法语考试答题模板</h2>
+      <pre>La méthode de Newton consiste à remplacer localement la courbe y=f(x)
+par sa tangente au point x_n. L'intersection de cette tangente avec
+l'axe Ox donne x_{n+1}.
+
+La formule est :
+x_{n+1}=x_n-\frac{f(x_n)}{f'(x_n)}.</pre>
+    </section>
+  </main>
+
+  <script>
+    const svg = document.querySelector("#plot");
+    const slider = document.querySelector("#xSlider");
+    const out = {
+      xn: document.querySelector("#xn"),
+      fxn: document.querySelector("#fxn"),
+      dfxn: document.querySelector("#dfxn"),
+      xnext: document.querySelector("#xnext")
+    };
+
+    const width = 720;
+    const height = 460;
+    const margin = { left: 64, right: 28, top: 30, bottom: 58 };
+    const domain = { xMin: 0, xMax: 2.8, yMin: -0.7, yMax: 4.6 };
+
+    function f(x) {
+      return x * x - 2;
+    }
+
+    function df(x) {
+      return 2 * x;
+    }
+
+    function sx(x) {
+      return margin.left + (x - domain.xMin) / (domain.xMax - domain.xMin) * (width - margin.left - margin.right);
+    }
+
+    function sy(y) {
+      return height - margin.bottom - (y - domain.yMin) / (domain.yMax - domain.yMin) * (height - margin.top - margin.bottom);
+    }
+
+    function make(tag, attrs = {}) {
+      const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
+      Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+      return node;
+    }
+
+    function curvePath() {
+      const points = [];
+      for (let i = 0; i <= 220; i += 1) {
+        const x = domain.xMin + (domain.xMax - domain.xMin) * i / 220;
+        points.push(`${i === 0 ? "M" : "L"} ${sx(x).toFixed(2)} ${sy(f(x)).toFixed(2)}`);
+      }
+      return points.join(" ");
+    }
+
+    function draw() {
+      const xn = Number(slider.value);
+      const fxn = f(xn);
+      const dfxn = df(xn);
+      const xnext = xn - fxn / dfxn;
+      const root = Math.sqrt(2);
+      const tangent = x => fxn + dfxn * (x - xn);
+      const tangentLeft = Math.max(domain.xMin, xn - 0.8);
+      const tangentRight = Math.min(domain.xMax, xn + 0.8);
+
+      svg.replaceChildren();
+
+      svg.append(
+        make("line", { x1: margin.left, y1: sy(0), x2: width - margin.right, y2: sy(0), stroke: "#222", "stroke-width": 1.5 }),
+        make("line", { x1: sx(0), y1: margin.top, x2: sx(0), y2: height - margin.bottom, stroke: "#222", "stroke-width": 1.5 }),
+        make("path", { d: curvePath(), fill: "none", stroke: "#2458a6", "stroke-width": 3 }),
+        make("line", {
+          x1: sx(tangentLeft),
+          y1: sy(tangent(tangentLeft)),
+          x2: sx(tangentRight),
+          y2: sy(tangent(tangentRight)),
+          stroke: "#c43b2f",
+          "stroke-width": 3
+        }),
+        make("line", { x1: sx(xn), y1: sy(fxn), x2: sx(xn), y2: sy(0), stroke: "#c43b2f", "stroke-width": 1.5, "stroke-dasharray": "6 6" }),
+        make("line", { x1: sx(xnext), y1: sy(0), x2: sx(xnext), y2: sy(tangent(xnext)), stroke: "#26734d", "stroke-width": 1.5, "stroke-dasharray": "6 6" }),
+        make("circle", { cx: sx(xn), cy: sy(fxn), r: 7, fill: "#c43b2f" }),
+        make("circle", { cx: sx(xnext), cy: sy(0), r: 7, fill: "#26734d" }),
+        make("circle", { cx: sx(root), cy: sy(0), r: 5, fill: "#101010" })
+      );
+
+      const labels = [
+        { x: sx(xn) - 14, y: sy(0) + 28, text: "xₙ", fill: "#c43b2f" },
+        { x: sx(xnext) - 24, y: sy(0) - 16, text: "xₙ₊₁", fill: "#26734d" },
+        { x: sx(root) + 9, y: sy(0) + 22, text: "x*", fill: "#101010" },
+        { x: width - 34, y: sy(0) + 20, text: "x", fill: "#222" },
+        { x: sx(0) - 20, y: margin.top + 5, text: "y", fill: "#222" },
+        { x: sx(2.15), y: sy(f(2.15)) - 18, text: "y=f(x)", fill: "#2458a6" },
+        { x: sx(1.7), y: sy(tangent(1.7)) + 36, text: "tangente", fill: "#c43b2f" }
+      ];
+
+      labels.forEach(label => {
+        const node = make("text", { x: label.x, y: label.y, fill: label.fill });
+        node.textContent = label.text;
+        svg.append(node);
+      });
+
+      out.xn.textContent = xn.toFixed(4);
+      out.fxn.textContent = fxn.toFixed(4);
+      out.dfxn.textContent = dfxn.toFixed(4);
+      out.xnext.textContent = xnext.toFixed(4);
+    }
+
+    slider.addEventListener("input", draw);
+    draw();
+  </script>
+</body>
+</html>
