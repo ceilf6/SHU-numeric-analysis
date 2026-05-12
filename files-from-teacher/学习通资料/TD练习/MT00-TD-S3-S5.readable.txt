@@ -1,0 +1,192 @@
+MT00                                              TD                                           Chap 2
+
+
+
+                                      MT00 - TD
+                    Chapitre 2 - Résolution des systèmes linéaires
+
+
+Exercice 1
+   1. Soient A une matrice appartenant à Mn,m , y ∈ Rn et z ∈ Rm .
+       (a) Quelle est la taille de la matrice Az ? y ⊤ A ?
+       (b) Que valent leurs coefficients ?
+   2. Soit A une matrice appartenant à Mn,m . Soient {e 1 , e 2 , . . . , e m } la base canonique de
+      Rm et { f 1 , f 2 , . . . , f n } la base canonique de Rn .
+       (a) Que valent Ae i , (1 ≤ i ≤ m) ?
+       (b) Que valent ( f j )⊤ A, (1 ≤ j ≤ n) ?
+   3. Soient y et z ∈ Rn . Quelle est la taille de la matrice y ⊤ z ?
+   4. Soient y ∈ Rn et z ∈ Rm . Quelle est la taille de la matrice y z ⊤ ?
+   5. Soient A une matrice appartenant à Mn,m et B une matrice appartenant à Mm,p . On
+      note B 1 , . . . , B p les colonnes de B. Sous quelle forme peut-on écrire le produit AB ?
+   6. Soient A une matrice appartenant à Mn,m et B une matrice appartenant à Mm,p . On
+      note A 1 , . . . , A n les lignes de A. Sous quelle forme peut-on écrire le produit AB ?
+   7. Soient Λ une matrice diagonale appartenant à Mn,n , A une matrice appartenant à
+      Mn,m et B une matrice appartenant à Mm,n . Quels sont les termes des matrices ΛA
+      et B Λ ?
+   8. Soit A une matrice appartenant à Mn,n régulière (inversible). Montrer que l’inversion
+      de A se ramène à la résolution de n systèmes linéaires de la forme Ax = b.
+
+
+
+Exercice 2
+   On définit la matrice A, à n lignes et n colonnes par
+
+                                        2 −1                0
+                                                             
+                                      −1 2 −1                
+                                                             
+                                         . .   . .   . .     
+                                     
+                                             .     .     .   
+                                                              
+                                               −1 2 −1 
+                                        0             −1 2
+
+On veut résoudre Ax = 0.
+   1. Montrer en résolvant les n − 1 premières équations que x i = i x 1 , i = 1, . . . , n.
+   2. Résoudre la dernière équation et en déduire que x = 0.
+   3. En déduire que A est inversible.
+
+
+
+
+                                                  1
+MT00                                                TD                                            Chap 2
+
+
+
+Exercice 3
+   Soient A ∈ Mnn (R) et B ∈ Mnn (R) deux matrices triangulaires inférieures.
+Montrer que C = AB est une matrice triangulaire inférieure et que les termes de la diagonale
+de C vérifient : c i i = a i i × b i i (pour i = 1, ..., n).
+
+
+
+Exercice 4
+   On veut résoudre le système Ax = y où A ∈ Mnn (R) est tridiagonale et y ∈ Rn :
+
+                    b1 c1                            x1            y1
+                                                                  
+                  a2 b2       c2                 x2         y2 
+                                                  ..         .. 
+                                                                  
+                        ..    ..    ..                     =
+                 
+                           .     .     .        . 
+                                                        
+                                                                . 
+                                                                      
+                             a n−1 b n−1 c n−1   x n−1      y n−1 
+                                           an       bn         xn             yn
+                     |                {z                 }|    {z   }    |    {z   }
+                                      A                        x              y
+
+    1. Montrer, par récurrence sur i , que l’on peut se ramener au système suivant :
+                            ½
+                               x i = e i x i +1 + f i pour i = 1, .., n − 1
+                              xn = f n ,
+
+       où l’on déterminera les e i , i = 1, .., n − 1 et les f i , i = 1, ..., n. On suppose que toutes les
+       divisions nécessaires pour déterminer ces coefficients sont possibles.
+    2. La méthode précédente, qui permet de résoudre un système dont la matrice est tri-
+       diagonale, s’appelle méthode de Richtmayer. Ecrire l’algorithme de cette méthode.
+
+
+
+Exercice 5
+                                               
+                              1 2 1               4
+   Soient la matrice A = 2 2 1 et le vecteur b = 5 , appliquez l’algorithme de
+                                              
+                              1 1 1               3
+Gauss pour calculer la solution de Ax = b.
+
+
+
+Exercice 6
+   Soit A la matrice                                 
+                                               1 2  1
+                                           A= 2 1  1 
+                                               a 1 2a
+où a est un réel donné et b=(4, 5, 3)⊤ .
+    1. Résoudre le système Ax = b suivant les valeurs de a, en appliquant l’algorithme de
+       Gauss.
+    2. En déduire la factorisation LU de A, suivant les valeurs de a, quand cela est possible.
+
+                                                    2
+MT00                                          TD                                   Chap 2
+
+
+
+Exercice 7
+  Soit A la matrice                             
+                                     2  1 −1   1
+                                   2   0   4 −3 
+                                                
+                                A=
+                                   −4 −1 −12  9 
+                                                 
+                                    −2  1   1 −4
+  1. Vérifier que cette matrice admet une factorisation LU avec L triangulaire inférieure à
+     diagonale unité et U triangulaire supérieure.
+  2. Calculer les matrices L et U en utilisant l’algorithme de Doolittle.
+
+
+
+Exercice 8
+  Soit A une matrice dont on connait la factorisation LU suivante :
+                                                        
+                                   1 0 0         2 1 −2
+                            A =  2 1 0  0 1           1 
+                                  −1 2 1         0 0 −1
+
+  1. La matrice A est-elle inversible ?
+  2. Résoudre le système Ax = b avec b = (1, 6, 6)⊤ .
+  3. Calculer l’inverse de A.
+
+
+
+Exercice 9
+  Soit A la matrice                              
+                                            0 1 3
+                                        A= 2 3 4 
+                                            3 4 2
+  1. Résoudre le système Ax = b avec b = (1, 1, 1)⊤ .
+  2. Puisque A n’admet pas de factorisation LU , quelle matrice en admet une ? Précisez
+     cette factorisation.
+
+
+
+
+                                              3
+MT00                                                   TD                                  Chap 2
+
+
+
+Exercice 10
+  Soit A la matrice                                    
+                                                 9 6 3
+                                           A =  6 20 6 
+                                                 3 6 3
+  1. Montrer qu’il existe l 1 , l 2 , l 3 telles que
+
+                               ∀x ∈ R3 , x ⊤ Ax = (l 1 (x))2 + (l 2 (x))2 + (l 3 (x))2 ,
+
+       où
+
+                                            l 1 (x) = αx 1 + βx 2 + γx 3 ,
+                                            l 2 (x) = λx 2 + δx 3 ,
+                                            l 3 (x) = x 3 ,
+
+       en déduire que A est définie positive.
+  2. Calculer la matrice B triangulaire inférieure à diagonale positive telle que
+
+                                                       A = B B ⊤,
+
+       en utilisant l’algorithme vu en cours (ligne par ligne ou colonne par colonne).
+
+
+
+
+                                                       4
+
