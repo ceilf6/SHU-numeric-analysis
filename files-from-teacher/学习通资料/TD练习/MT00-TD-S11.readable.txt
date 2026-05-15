@@ -1,0 +1,105 @@
+                     UTSEUS-MT00-2026-Printemps-TD (S11)
+                                          dushuimiao@shu.edu.cn
+
+                                                   Avril, 2026
+
+
+
+Exercice 1
+Soit une fonction g : [a, +8) Ñ [a, +8) continûment dérivable sur [a, +8) et supposons que
+
+                                       |g 1 (x)| ď k ă 1,    @x P [a, +8).
+
+Montrer que g possède un point fixe unique x˚ P [a, +8) et la suite
+                                        $
+                                        &x donné dans [a, +8),
+                                           0
+
+                                        %x     = g(x ), n ą 0
+                                             n+1         n
+
+
+converge vers x˚ .
+
+
+Exercice 2
+  1. Calculer
+                                                              1
+                                                   1+
+                                                                  1
+                                                        1+
+                                                                      1
+                                                             1+
+                                                                     .
+                                                                  1 + ..
+  2. Calculer                               d       c
+                                                               ?
+                                                           b
+                                               1+       1 + 1 + 1 + ¨¨¨
+
+
+Exercice 3
+                                                                                   2
+Pour calculer la racine x˚ de x2 ´ 3x ´ 1 = 0 sur [´1, +1], on pose g(x) = x 3´1 pour appliquer une méthode
+de point fixe x = g(x). Montrer que la suite xn+1 = g(xn ), avec x0 P [´1, +1], converge vers un unique point
+fixe x˚ P [´1, 1].
+
+
+Exercice 4
+Soit une suite (xn ) convergeant vers x˚ . On suppose que
+
+
+                                Dk ă 1,    |xi+1 ´ xi | ď k |xi ´ xi´1 | @i P N.
+                                                         1
+   1. Montrer que
+                                              |xn+1 ´ xn | ď k n |x1 ´ x0 |.
+
+   2. En déduire que, pour p ą n,
+                                                   (                   )
+                                       |xp ´ xn | ď k p´1 + . . . + k n |x1 ´ x0 |.
+
+   3. Après avoir calculé la somme du membre de droite, faites tendre p vers l’infini pour obtenir
+                                                              kn
+                                             |x˚ ´ xn | ď        |x1 ´ x0 |.
+                                                             1´k
+
+
+Exercice 5
+                                2
+On reprend la fonction g(x) = x 3´1 dont l’unique point fixe x˚ de [´1, 1] est racine du trinôme x2 ´ 3x ´ 1 = 0.
+Soit x0 = 0, calculer le nombre d’itérations de point fixe n nécessaires pour obtenir une précision inférieure à
+ε = 10´3 pour le calcul de x˚ . Vérifier votre résultat en calculant les n premiers itérés de la méthode de point
+fixe.
+
+
+Exercice 6
+Cet exercice explique comment une “division” est effectuée dans un microprocesseur. Soit
+                                                               ]     [
+                                                            1    1
+                                    a P]1, 2[; on pose b = P       ,1 .
+                                                            a    2
+
+On souhaite approcher l’inverse b de a, sans division. On introduit la fonction
+                                                             1
+                                                  f (x) =      ´ a.
+                                                             x
+On a donc f (b) = 0.
+
+
+Appliquer la méthode de Newton à l’équation f (x) = 0 et montrer que l’on peut s’arranger pour ne faire que
+des opérations d’addition et de multiplication.
+
+
+Exercice 7
+On considère les deux équations non-linéaires
+
+
+                                     x21 + (x2 ´ 1)2 = 4,     x21 ´ x2 + 1 = 0.
+
+Écrire une étape de la méthode de Newton. Prenez un vecteur x(0) et calculez le vecteur x(1) .
+
+
+
+
+                                                         2
+
